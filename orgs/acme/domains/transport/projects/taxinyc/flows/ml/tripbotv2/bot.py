@@ -18,8 +18,9 @@ import backoff
 import mlflow
 import openai
 from databricks.sdk import WorkspaceClient
-from databricks_openai import VectorSearchRetrieverTool, UCFunctionToolkit
-from unitycatalog.ai.core.base import get_uc_function_client
+from databricks_openai import VectorSearchRetrieverTool
+# from databricks_openai import VectorSearchRetrieverTool UCFunctionToolkit
+# from unitycatalog.ai.core.base import get_uc_function_client
 from mlflow.entities import SpanType
 from mlflow.pyfunc import ChatAgent
 from mlflow.types.agent import (
@@ -68,8 +69,8 @@ TOOL_INFOS = []
 # TODO: Add additional tools
 UC_TOOL_NAMES = ["system.ai.python_exec"]
 
-uc_toolkit = UCFunctionToolkit(function_names=UC_TOOL_NAMES)
-uc_function_client = get_uc_function_client()
+# uc_toolkit = UCFunctionToolkit(function_names=UC_TOOL_NAMES)
+# uc_function_client = get_uc_function_client()
 # for tool_spec in uc_toolkit.tools:
 #     tool_name = tool_spec["function"]["name"]
 #     udf_name = tool_name.replace("__", ".")
