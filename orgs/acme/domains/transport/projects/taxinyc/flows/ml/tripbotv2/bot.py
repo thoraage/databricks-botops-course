@@ -187,7 +187,7 @@ class ToolCallingAgent(ChatAgent):
         """
         return [tool_info.spec for tool_info in self._tools_dict.values()]
 
-    @mlflow.trace(span_type=SpanType.TOOL)
+    # @mlflow.trace(span_type=SpanType.TOOL)
     def execute_tool(self, tool_name: str, args: dict) -> Any:
         """
         Executes the specified tool with the given arguments.
@@ -230,7 +230,7 @@ class ToolCallingAgent(ChatAgent):
             {k: v for k, v in m.model_dump_compat(exclude_none=True).items() if k in compatible_keys} for m in messages
         ]
 
-    @mlflow.trace(span_type=SpanType.AGENT)
+    # @mlflow.trace(span_type=SpanType.AGENT)
     def predict(
         self,
         messages: List[ChatAgentMessage],
@@ -250,7 +250,7 @@ class ToolCallingAgent(ChatAgent):
         ]
         return ChatAgentResponse(messages=response_messages)
 
-    @mlflow.trace(span_type=SpanType.AGENT)
+    # @mlflow.trace(span_type=SpanType.AGENT)
     def predict_stream(
         self,
         messages: List[ChatAgentMessage],
@@ -292,7 +292,7 @@ class ToolCallingAgent(ChatAgent):
             tools=self.get_tool_specs(),
         )
 
-    @mlflow.trace(span_type=SpanType.AGENT)
+    # @mlflow.trace(span_type=SpanType.AGENT)
     def call_and_run_tools(
         self, messages, max_iter=10
     ) -> Generator[ChatAgentMessage, None, None]:
