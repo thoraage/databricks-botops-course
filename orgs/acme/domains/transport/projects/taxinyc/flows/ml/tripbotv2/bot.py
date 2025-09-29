@@ -311,6 +311,7 @@ class ToolCallingAgent(ChatAgent):
                 tool_calls = assistant_message.tool_calls
                 if assistant_message.tool_calls:
                     assistant_message.tool_calls = None
+                    assistant_message.content = ""
                 
                 yield assistant_message
 
