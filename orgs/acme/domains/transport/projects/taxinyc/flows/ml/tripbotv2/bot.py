@@ -308,9 +308,12 @@ class ToolCallingAgent(ChatAgent):
                 llm_message = response.choices[0].message
                 assistant_message = ChatAgentMessage(**llm_message.to_dict(), id=str(uuid4()))
                 current_msg_history.append(assistant_message)
+                tool_calls = assistant_message.tool_calls
+                if assistant_message.tool_calls:
+                    assistant_message.tool_calls = None
+                
                 yield assistant_message
 
-                tool_calls = assistant_message.tool_calls
                 if not tool_calls:
                     return  # Stop streaming if no tool calls are needed
 
