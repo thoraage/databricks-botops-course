@@ -308,9 +308,13 @@ class ToolCallingAgent(ChatAgent):
                 llm_message = response.choices[0].message
                 assistant_message = ChatAgentMessage(**llm_message.to_dict(), id=str(uuid4()))
                 current_msg_history.append(assistant_message)
+                tool_calls = assistant_message.tool_calls
+                if assistant_message.tool_calls:
+                    assistant_message.tool_calls = None
+                    assistant_message.content = ""
+                
                 yield assistant_message
 
-                tool_calls = assistant_message.tool_calls
                 if not tool_calls:
                     return  # Stop streaming if no tool calls are needed
 
@@ -322,7 +326,13 @@ class ToolCallingAgent(ChatAgent):
                     # Cast tool result to a string, since not all tools return as tring
                     result = str(self.execute_tool(tool_name=function.name, args=args))
                     tool_call_msg = ChatAgentMessage(
-                        role="tool", name=function.name, tool_call_id=tool_call.id, content=result, id=str(uuid4())
+                        # {"role": "assistant", "content": "Hello! It's nice to meet you. Is there something I can help you with, or would you like to chat about NYC taxi data?", "id": "fe059c9b-b8c3-4e33-8544-de92ccb64014"}]}
+                        # role="tool", 
+                        role="assistant",
+                        # name=function.name, 
+                        # tool_call_id=tool_call.id,
+                        content=result, 
+                        id=str(uuid4())
                     )
                     current_msg_history.append(tool_call_msg)
                     yield tool_call_msg
@@ -336,6 +346,6 @@ class ToolCallingAgent(ChatAgent):
 
 
 # Log the model using MLflow
-mlflow.openai.autolog()
+# mlflow.openai.autolog()
 BOT = ToolCallingAgent(llm_endpoint=LLM_ENDPOINT_NAME, tools=TOOL_INFOS)
 mlflow.models.set_model(BOT)
