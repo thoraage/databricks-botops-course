@@ -18,8 +18,9 @@ import backoff
 import mlflow
 import openai
 from databricks.sdk import WorkspaceClient
-from databricks_openai import VectorSearchRetrieverTool, UCFunctionToolkit
-from unitycatalog.ai.core.base import get_uc_function_client
+from databricks_openai import VectorSearchRetrieverTool
+# from databricks_openai import VectorSearchRetrieverTool UCFunctionToolkit
+# from unitycatalog.ai.core.base import get_uc_function_client
 from mlflow.entities import SpanType
 from mlflow.pyfunc import ChatAgent
 from mlflow.types.agent import (
@@ -66,10 +67,10 @@ TOOL_INFOS = []
 # a python code interpreter tool to our agent
 
 # TODO: Add additional tools
-UC_TOOL_NAMES = ["system.ai.python_exec"]
+# UC_TOOL_NAMES = ["system.ai.python_exec"]
 
-uc_toolkit = UCFunctionToolkit(function_names=UC_TOOL_NAMES)
-uc_function_client = get_uc_function_client()
+# uc_toolkit = UCFunctionToolkit(function_names=UC_TOOL_NAMES)
+# uc_function_client = get_uc_function_client()
 # for tool_spec in uc_toolkit.tools:
 #     tool_name = tool_spec["function"]["name"]
 #     udf_name = tool_name.replace("__", ".")
@@ -186,7 +187,7 @@ class ToolCallingAgent(ChatAgent):
         """
         return [tool_info.spec for tool_info in self._tools_dict.values()]
 
-    @mlflow.trace(span_type=SpanType.TOOL)
+    # @mlflow.trace(span_type=SpanType.TOOL)
     def execute_tool(self, tool_name: str, args: dict) -> Any:
         """
         Executes the specified tool with the given arguments.
@@ -229,7 +230,7 @@ class ToolCallingAgent(ChatAgent):
             {k: v for k, v in m.model_dump_compat(exclude_none=True).items() if k in compatible_keys} for m in messages
         ]
 
-    @mlflow.trace(span_type=SpanType.AGENT)
+    # @mlflow.trace(span_type=SpanType.AGENT)
     def predict(
         self,
         messages: List[ChatAgentMessage],
@@ -249,7 +250,7 @@ class ToolCallingAgent(ChatAgent):
         ]
         return ChatAgentResponse(messages=response_messages)
 
-    @mlflow.trace(span_type=SpanType.AGENT)
+    # @mlflow.trace(span_type=SpanType.AGENT)
     def predict_stream(
         self,
         messages: List[ChatAgentMessage],
@@ -291,7 +292,7 @@ class ToolCallingAgent(ChatAgent):
             tools=self.get_tool_specs(),
         )
 
-    @mlflow.trace(span_type=SpanType.AGENT)
+    # @mlflow.trace(span_type=SpanType.AGENT)
     def call_and_run_tools(
         self, messages, max_iter=10
     ) -> Generator[ChatAgentMessage, None, None]:
